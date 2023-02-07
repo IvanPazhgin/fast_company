@@ -11,17 +11,10 @@ const Users = () => {
   const changePhrase = (number) => {
     if (number >= 11 && number <= 14) return 'человек тусанёт'
 
-    let message = ''
-    const lastNumberOfUsersArray = [2, 3, 4]
     const lastCharacterOfUsers = Number(number.toString().at(-1))
 
-    for (let i = 0; i < lastNumberOfUsersArray.length; i++) {
-      if (lastCharacterOfUsers === lastNumberOfUsersArray[i]) {
-        message = 'человека тусанут'
-        break
-      } else message = 'человек тусанёт'
-    }
-    return message
+    if ([2, 3, 4].includes(lastCharacterOfUsers)) return 'человека тусанут'
+     else return 'человек тусанёт'
   }
 
   const renderPhrase = (number) => {
