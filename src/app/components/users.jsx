@@ -15,7 +15,16 @@ const Users = ({ users, ...rest }) => {
     const [selectedProf, setSelectedProf] = useState(); // добавляем класс active чтобы выбранная профессия выделялась синим цветом
 
     useEffect(() => {
-        api.professions.fetchAll().then((data) => setProfessions(data)); // then вместо асинхронной функции
+        // к текущим профессиям добавляем еще одну (работает только с объектами)
+        api.professions
+            .fetchAll()
+            .then((data) => // then вместо асинхронной функции
+                setProfessions(
+                    Object.assign(data, {
+                        allProfession: { name: "Все профессии" }
+                    })
+                )
+            );
         // console.log("render"); // без deps: []
         // console.log("change curren page"); // deps: [currentPage]
         // return () => {
@@ -35,7 +44,9 @@ const Users = ({ users, ...rest }) => {
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
     };
-    const filteredUsers = selectedProf ? users.filter((user) => user.profession === selectedProf) : users;
+    const filteredUsers = selectedProf && selectedProf._id
+        ? users.filter((user) => user.profession === selectedProf)
+        : users;
     const userCrop = paginate(filteredUsers, currentPage, pageSize);
 
     return (
