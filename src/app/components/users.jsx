@@ -12,6 +12,7 @@ const Users = ({ users, ...rest }) => {
     const [currentPage, setCurrentPage] = useState(1);
     // const [professions] = useState(api.professions.fetchAll()); // плохо когда есть Promise
     const [professions, setProfessions] = useState();
+    const [selectedProf, setSelectedProf] = useState(); // добавляем класс active чтобы выбранная профессия выделялась синим цветом
 
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfessions(data)); // then вместо асинхронной функции
@@ -27,8 +28,8 @@ const Users = ({ users, ...rest }) => {
     //     console.log(professions);
     // }, [professions]);
 
-    const handleProfessionSelect = (params) => {
-        console.log(params);
+    const handleProfessionSelect = item => {
+        setSelectedProf(item);
     };
 
     const handlePageChange = (pageIndex) => {
@@ -44,6 +45,7 @@ const Users = ({ users, ...rest }) => {
                 <GroupList
                     items={professions}
                     onItemSelect={handleProfessionSelect}
+                    selectedItem={selectedProf} // передаем целый объект
                     // valueProperty="_id" // переиспользуемый компонент, откл. т.к. прописали GroupList.defaultProps
                     // contentProperty="name" // переиспользуемый компонент
                 />

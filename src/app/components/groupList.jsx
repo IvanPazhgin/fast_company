@@ -24,11 +24,19 @@ import PropTypes from "prop-types";
 // };
 
 // 2 вар: переиспользуемый компонент
-const GroupList = ({ items, valueProperty, contentProperty }) => {
+const GroupList = ({ items, onItemSelect, selectedItem, valueProperty, contentProperty }) => {
     return (
         <ul className="list-group">
             {Object.keys(items).map(item => (
-                <li key={items[item][valueProperty]} className="list-group-item">
+                <li
+                    key={items[item][valueProperty]}
+                    className={
+                        "list-group-item" +
+                        (items[item] === selectedItem ? " active" : "") // сравниваем не id, а прямо объекты
+                    }
+                    onClick={() => onItemSelect(items[item])} // для универсальности передаем items[item] вместо id
+                    role="button" // чтобы менялся курсор при наведении мышки
+                >
                     {items[item][contentProperty]}
                 </li>
             ))}
@@ -42,6 +50,8 @@ GroupList.defaultProps = {
 };
 GroupList.propTypes = {
     items: PropTypes.object.isRequired,
+    onItemSelect: PropTypes.func,
+    selectedItem: PropTypes.object,
     valueProperty: PropTypes.string.isRequired,
     contentProperty: PropTypes.string.isRequired
 };
