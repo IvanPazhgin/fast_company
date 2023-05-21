@@ -13,7 +13,8 @@ module.exports = {
     rules: {
         indent: ["error", 4], // отступы
         semi: [2, "always"], // точка с запятой
-        "space-before-function-paren": ["error", "never"], // убираем пробел перед скобками при обозначении функции
+        // "space-before-function-paren": ["error", "never"], // убираем пробел перед скобками при обозначении функции
+        "space-before-function-paren": ["error", { anonymous: "always", named: "never" }],
         quotes: ["error", "double", { allowTemplateLiterals: true }] // двойные кавычки
     }
 };
