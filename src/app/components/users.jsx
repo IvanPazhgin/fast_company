@@ -5,9 +5,9 @@ import paginate from "../utils/paginate";
 import PropTypes from "prop-types";
 import api from "../api/";
 import GroupList from "./groupList";
+import SearchStatus from "./searchStatus";
 
 const Users = ({ users, ...rest }) => {
-    const count = users.length;
     const pageSize = 4; // кол-во элементов на странице
     const [currentPage, setCurrentPage] = useState(1);
     // const [professions] = useState(api.professions.fetchAll()); // плохо когда есть Promise
@@ -28,10 +28,9 @@ const Users = ({ users, ...rest }) => {
         // };
     }, []);
 
-    // useEffect(() => {
-    //     setCurrentPage(1); // меняем на текущую 1ю при фильтрации, чтобы исключить баг
-    //     console.log(professions);
-    // }, [professions]);
+    useEffect(() => {
+        setCurrentPage(1); // меняем на текущую 1ю при фильтрации, чтобы исключить баг
+    }, [selectedProf]);
 
     const handleProfessionSelect = item => {
         setSelectedProf(item);
@@ -40,9 +39,11 @@ const Users = ({ users, ...rest }) => {
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
     };
+
     const filteredUsers = selectedProf
         ? users.filter((user) => user.profession === selectedProf)
         : users;
+    const count = filteredUsers.length;
     const userCrop = paginate(filteredUsers, currentPage, pageSize);
 
     // сброс фильтрации при работе с массивами
@@ -51,11 +52,13 @@ const Users = ({ users, ...rest }) => {
         // можно добавить сброс страницы
     };
 
+    // https://getbootstrap.com/docs/5.3/utilities/flex/
+    // https://css-tricks.com/snippets/css/a-guide-to-flexbox/ - руководство
     return (
-        <>
+        <div className="d-flex">
             {/* условный рендеринг из-за GroupList.propTypes */}
             {professions && (
-                <>
+                <div className="d-flex flex-column flex-shrink-0 p-3">
                     <GroupList
                         items={professions}
                         onItemSelect={handleProfessionSelect}
@@ -69,35 +72,41 @@ const Users = ({ users, ...rest }) => {
                     >
                     Очистить фильтр
                     </button>
-                </>
+                </div>
             )}
-            {count > 0 && (
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Имя</th>
-                            <th scope="col">Качества</th>
-                            <th scope="col">Профессия</th>
-                            <th scope="col">Встретился, раз</th>
-                            <th scope="col">Оценка</th>
-                            <th scope="col">Избранное</th>
-                            <th />
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {userCrop.map((user) => (
-                            <User key={user._id} {...user} {...rest} />
-                        ))}
-                    </tbody>
-                </table>
-            )}
-            <Pagination
-                itemsCount={count}
-                pageSize={pageSize}
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
-            />
-        </>
+
+            <div className="d-flex flex-column">
+                <SearchStatus lengthOfPeople={count} />
+                {count > 0 && (
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Имя</th>
+                                <th scope="col">Качества</th>
+                                <th scope="col">Профессия</th>
+                                <th scope="col">Встретился, раз</th>
+                                <th scope="col">Оценка</th>
+                                <th scope="col">Избранное</th>
+                                <th />
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {userCrop.map((user) => (
+                                <User key={user._id} {...user} {...rest} />
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+                <div className="d-flex justify-content-center">
+                    <Pagination
+                        itemsCount={count}
+                        pageSize={pageSize}
+                        currentPage={currentPage}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
+            </div>
+        </div>
     );
 };
 
