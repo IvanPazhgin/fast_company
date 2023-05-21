@@ -35,8 +35,8 @@ const Users = ({ users, ...rest }) => {
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
     };
-
-    const userCrop = paginate(users, currentPage, pageSize);
+    const filteredUsers = selectedProf ? users.filter((user) => user.profession === selectedProf) : users;
+    const userCrop = paginate(filteredUsers, currentPage, pageSize);
 
     return (
         <>
