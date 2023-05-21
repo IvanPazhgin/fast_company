@@ -44,8 +44,8 @@ const Users = ({ users, ...rest }) => {
                 <GroupList
                     items={professions}
                     onItemSelect={handleProfessionSelect}
-                    valueProperty="_id" // переиспользуемый компонент
-                    contentProperty="name" // переиспользуемый компонент
+                    // valueProperty="_id" // переиспользуемый компонент, откл. т.к. прописали GroupList.defaultProps
+                    // contentProperty="name" // переиспользуемый компонент
                 />
             )}
             {count > 0 && (
