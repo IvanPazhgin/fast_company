@@ -19,11 +19,7 @@ const Users = ({ users, ...rest }) => {
         api.professions
             .fetchAll()
             .then((data) => // then вместо асинхронной функции
-                setProfessions(
-                    Object.assign(data, {
-                        allProfession: { name: "Все профессии" }
-                    })
-                )
+                setProfessions(data)
             );
         // console.log("render"); // без deps: []
         // console.log("change curren page"); // deps: [currentPage]
@@ -44,22 +40,36 @@ const Users = ({ users, ...rest }) => {
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
     };
-    const filteredUsers = selectedProf && selectedProf._id
+    const filteredUsers = selectedProf
         ? users.filter((user) => user.profession === selectedProf)
         : users;
     const userCrop = paginate(filteredUsers, currentPage, pageSize);
+
+    // сброс фильтрации при работе с массивами
+    const clearFilter = () => {
+        setSelectedProf();
+        // можно добавить сброс страницы
+    };
 
     return (
         <>
             {/* условный рендеринг из-за GroupList.propTypes */}
             {professions && (
-                <GroupList
-                    items={professions}
-                    onItemSelect={handleProfessionSelect}
-                    selectedItem={selectedProf} // передаем целый объект
-                    // valueProperty="_id" // переиспользуемый компонент, откл. т.к. прописали GroupList.defaultProps
-                    // contentProperty="name" // переиспользуемый компонент
-                />
+                <>
+                    <GroupList
+                        items={professions}
+                        onItemSelect={handleProfessionSelect}
+                        selectedItem={selectedProf} // передаем целый объект
+                        // valueProperty="_id" // переиспользуемый компонент, откл. т.к. прописали GroupList.defaultProps
+                        // contentProperty="name" // переиспользуемый компонент
+                    />
+                    <button
+                        className="btn btn-secondary mt-2"
+                        onClick={clearFilter}
+                    >
+                    Очистить фильтр
+                    </button>
+                </>
             )}
             {count > 0 && (
                 <table className="table">
